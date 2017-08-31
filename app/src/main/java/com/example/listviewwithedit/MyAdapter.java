@@ -45,7 +45,6 @@ public class MyAdapter extends ArrayAdapter<ItemTest> implements View.OnClickLis
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_test, null);
             vh = new VH(convertView);
             convertView.setTag(vh);
-            convertView.setTag(R.id.item_root, position);
         } else {
             vh = (VH) convertView.getTag();
         }
@@ -64,6 +63,7 @@ public class MyAdapter extends ArrayAdapter<ItemTest> implements View.OnClickLis
         vh.editText.setText(text);
         vh.editText.setSelection(vh.editText.length());
 
+        convertView.setTag(R.id.item_root, position); // 应该在这里让convertView绑定position
         convertView.setOnClickListener(this);
 
         return convertView;
@@ -71,10 +71,7 @@ public class MyAdapter extends ArrayAdapter<ItemTest> implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.et_test) {
-            selectedEditTextPosition = (int) v.getTag();
-            Log.w("MyAdapter", "clicked position: " + selectedEditTextPosition);
-        } else if (v.getId() == R.id.item_root) {
+        if (v.getId() == R.id.item_root) {
             int position = (int) v.getTag(R.id.item_root);
             Toast.makeText(getContext(), "点击第 " + position + " 个item", Toast.LENGTH_SHORT).show();
         }
@@ -85,6 +82,7 @@ public class MyAdapter extends ArrayAdapter<ItemTest> implements View.OnClickLis
         if (event.getAction() == MotionEvent.ACTION_UP) {
             EditText editText = (EditText) v;
             selectedEditTextPosition = (int) editText.getTag();
+            Log.w("MyAdapter", "clicked position: " + selectedEditTextPosition);
         }
         return false;
     }
